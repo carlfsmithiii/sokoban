@@ -125,20 +125,22 @@ function leftPressed() {
 }
 
 function tryToMovePlayer(rowShift, columnShift) {
-    const newRow = currentPosition.row + rowShift;
-    const newColumn = currentPosition.column + columnShift;
     if (isValidPosition(rowShift, columnShift)) {
         if (isBox(rowShift, columnShift)) {
             shiftBox(rowShift, columnShift);
         }
-        currentPosition.row = newRow;
-        currentPosition.column = newColumn;
-        const rowQuery = "[data-row='" + newRow + "']";
-        const columnQuery = "[data-column='" + newColumn + "']";
-        const nodeMovedTo = document.querySelector(rowQuery + columnQuery);
-        const currentPlayer = document.getElementsByClassName("player")[0];
-        nodeMovedTo.appendChild(currentPlayer);
+        movePlayer(currentPosition.row + rowShift, currentPosition.column + columnShift);
     }
+}
+
+function movePlayer(newRow, newColumn) {
+    currentPosition.row = newRow;
+    currentPosition.column = newColumn;
+    const rowQuery = "[data-row='" + newRow + "']";
+    const columnQuery = "[data-column='" + newColumn + "']";
+    const nodeMovedTo = document.querySelector(rowQuery + columnQuery);
+    const currentPlayer = document.getElementsByClassName("player")[0];
+    nodeMovedTo.appendChild(currentPlayer);
 }
 
 function isValidPosition(rowShift, columnShift) {
@@ -147,7 +149,7 @@ function isValidPosition(rowShift, columnShift) {
     }
 
     if (isBox(rowShift, columnShift)) {
-        return (!isBox(rowShift * 2, columnShift * 2)) && (!isWall(rowShift * 2, columnShift * 2));
+        return !(isBox(rowShift * 2, columnShift * 2) || isWall(rowShift * 2, columnShift * 2));
     }
 
     return true;
