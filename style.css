@@ -2,36 +2,70 @@
     --light-brown: #A5714E;
     --brown: #763931;
     --wall-color: rgb(39, 39, 41);
+    --hall-color: #FFFFFF;
     --cell-height: 30px;
     --cell-width: 30px;
-
+    --storage-color: #0000FF;
 }
 
 .storage-location {
     z-index: 3;
     height: calc(var(--cell-height) / 3);
     width: calc(var(--cell-width) / 3);
+    background-color: var(--storage-color);
     border-radius: 50%;
+}
+
+.cell {
+    height: var(--cell-height);
+    width: var(--cell-width);
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .box {
     z-index: 5;
     background-color: var(--light-brown);
-    height: var(--cell-height);
-    width: var(--cell-width);
+    position: absolute;
+    /* height: var(--cell-height);
+    width: var(--cell-width); */
 }
 
 .box.box-on-storage-location {
     background-color: var(--brown);
+    /* height: var(--cell-height);
+    width: var(--cell-width); */
 }
 
 .wall {
     background-color: var(--wall-color);
+    /* height: var(--cell-height);
+    width: var(--cell-width); */
+}
+
+.open-hall {
+    background-color: var(--hall-color);
+    /* height: var(--cell-height);
+    width: var(--cell-width);  */
 }
 
 .player {
     z-index: 1;
+    position: absolute;
     background-color: red;
     height: var(--cell-height);
     width: var(--cell-width); 
+}
+
+#game-field {
+    display: flex;
+    flex-direction: column; 
+}
+
+.row {
+    display: flex;
 }
