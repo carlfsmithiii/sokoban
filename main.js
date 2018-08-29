@@ -36,7 +36,7 @@ const direction = {
     none: 0
 };
 
-let currentPosition = {
+const currentPosition = {
     row: 2,
     column: 2
 }
@@ -170,21 +170,41 @@ function isBox(rowShift, columnShift) {
 }
 
 function shiftBox(rowShift, columnShift) {
-    const boxRowQuery = "[data-row='" + (currentPosition.row + rowShift) + "']";
-    const boxColumnQuery = "[data-column='" + (currentPosition.column + columnShift) + "']";
-    const newHomeRowQuery = "[data-row='" + (currentPosition.row + (rowShift * 2)) + "']";
-    const newHomeColumnQuery = "[data-column='" + (currentPosition.column + (columnShift * 2)) + "']";
-    const box = document.querySelector(boxRowQuery + boxColumnQuery + " .box");
-    const newHomeForBox = document.querySelector(newHomeRowQuery + newHomeColumnQuery);
+    const box = getBoxNode(rowShift, columnShift);
+    shiftBoxInView(box, rowShift, columnShift);
+    shiftBoxInModel(rowShift, columnShift);
+}
+
+function shiftBoxInView(box, rowShift, columnShift) {
+    const newHomeForBox = getCellNode(rowShift * 2, columnShift * 2);
     newHomeForBox.appendChild(box);
-    currentMap[currentPosition.row + rowShift][currentPosition.column + columnShift] = " ";
-    currentMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] = "B";
+    changeBoxColorIfOnStorage(box, rowShift, columnShift);
+}
+
+function changeBoxColorIfOnStorage(box, rowShift, columnShift) {
     if (initialMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "O" || 
         initialMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "X") {
         box.classList.add("box-on-storage-location");
     } else {
         box.classList.remove("box-on-storage-location");
     }
+}
+
+function shiftBoxInModel(rowShift, columnShift) {
+    currentMap[currentPosition.row + rowShift][currentPosition.column + columnShift] = " ";
+    currentMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] = "B";
+}
+
+function getBoxNode(rowShift, columnShift) {
+    const rowQuery = "[data-row='" + (currentPosition.row + rowShift) + "']"; 
+    const columnQuery = "[data-column='" + (currentPosition.column + columnShift) + "']";
+    return document.querySelector(rowQuery + columnQuery + " .box");
+}
+
+function getCellNode(rowShift, columnShift) {
+    const rowQuery = "[data-row='" + (currentPosition.row + rowShift) + "']"; 
+    const columnQuery = "[data-column='" + (currentPosition.column + columnShift) + "']";
+    return document.querySelector(rowQuery + columnQuery);
 }
 
 const initCell = {
@@ -235,7 +255,7 @@ function createCellWithBoxAndStorage(rowIndex, columnIndex) {
 function checkWin() {
     if (document.getElementsByClassName("box-on-storage-location").length == boxCount) {
         isGameStillGoing = false;
-        setTimeout(function() {alert("YOU WIN!");}, 300);
+        setTimeout(function() {alert("YOU WIN!");}, 100);
     }
 }
 
