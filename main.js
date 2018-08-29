@@ -23,18 +23,6 @@ const initialMap = [
   "WWWWWWWW"
 ];
 
-// const currentMap = [
-//     "  WWWWW ".split(""),
-//     "WWW   W ".split(""),
-//     "W  B  W ".split(""),
-//     "WWW B W ".split(""),
-//     "WOWWB W ".split(""),
-//     "W W   WW".split(""),
-//     "WB BBB W".split(""),
-//     "W      W".split(""),
-//     "WWWWWWWW".split("")
-// ];
-
 const currentMap = [];
 
 const gameGridHeight = initialMap.length;
@@ -53,6 +41,11 @@ let currentPosition = {
     column: 2
 }
 
+function initGame() {
+    initGameView();
+    initCurrentMap();
+}
+
 function initGameView() {
     for (let rowIndex = 0; rowIndex < gameGridHeight; rowIndex++) {
         const rowNode = createDivNodeWithClasses(["row"]);
@@ -65,7 +58,7 @@ function initGameView() {
     }
 }
 
-function initCurrentModel() {
+function initCurrentMap() {
     for (let rowIndex = 0; rowIndex < gameGridHeight; rowIndex++) {
         currentMap.push([]);
         for (let columnIndex = 0; columnIndex < gameGridWidth; columnIndex++) {
@@ -89,6 +82,7 @@ function initCurrentModel() {
 }
 
 function play() {
+    initGame();
     document.addEventListener("keydown", (event) => {
         if (isGameStillGoing) {
             const keyName = event.key;
@@ -192,38 +186,78 @@ function shiftBox(rowShift, columnShift) {
 }
 
 const initCell = {
-    "W": function(rowIndex, columnIndex) {
-        return createDivNodeWithClasses(["cell", "wall"]);
-    },
-    " ": function(rowIndex, columnIndex) {
-        const groundCell = createDivNodeWithClasses(["cell", "open-hall"]);
-        groundCell.dataset.row = rowIndex;
-        groundCell.dataset.column = columnIndex;
-        return groundCell;
-    },
-    "B": function(rowIndex, columnIndex) {
-        const groundCell = initCell[" "](rowIndex, columnIndex);
-        groundCell.appendChild(createDivNodeWithClasses(["cell", "box"]));
-        //boxCount++;
-        return groundCell;
-    },
-    "O": function(rowIndex, columnIndex) {
-        const groundCell = initCell[" "](rowIndex, columnIndex);
-        groundCell.appendChild(createDivNodeWithClasses(["storage-location"]));
-        return groundCell;
-    },
-    "S": function(rowIndex, columnIndex) {
-        const groundCell = initCell[" "](rowIndex, columnIndex);
-        groundCell.appendChild(createDivNodeWithClasses(["player"]));
-        return groundCell;
-    },
-    "X": function(rowIndex, columnIndex) {
-        const groundCell = initCell[" "](rowIndex, columnIndex);
-        groundCell.appendChild(createDivNodeWithClasses(["storage-location"]));
-        groundCell.appendChild(createDivNodeWithClasses(["cell", "box", "box-on-storage-location"]));
-        // boxCount++;
-        return groundCell;
-    }
+    // "W": function(rowIndex, columnIndex) {
+    //     return createDivNodeWithClasses(["cell", "wall"]);
+    // },
+    "W": createWall,
+    // " ": function(rowIndex, columnIndex) {
+    //     const baseCell = createDivNodeWithClasses(["cell", "open-hall"]);
+    //     baseCell.dataset.row = rowIndex;
+    //     baseCell.dataset.column = columnIndex;
+    //     return baseCell;
+    // },
+    " ": createNonWallCell,
+    // "B": function(rowIndex, columnIndex) {
+    //     const baseCell = initCell[" "](rowIndex, columnIndex);
+    //     baseCell.appendChild(createDivNodeWithClasses(["cell", "box"]));
+    //     return baseCell;
+    // },
+    "B": createCellWithBox,
+    // "O": function(rowIndex, columnIndex) {
+    //     const baseCell = initCell[" "](rowIndex, columnIndex);
+    //     baseCell.appendChild(createDivNodeWithClasses(["storage-location"]));
+    //     return baseCell;
+    // },
+    "O": createCellWithStorageLocation,
+    // "S": function(rowIndex, columnIndex) {
+    //     const baseCell = initCell[" "](rowIndex, columnIndex);
+    //     baseCell.appendChild(createDivNodeWithClasses(["player"]));
+    //     return baseCell;
+    // },
+    "S": createPlayersInitialPosition,
+    // "X": function(rowIndex, columnIndex) {
+    //     const baseCell = initCell[" "](rowIndex, columnIndex);
+    //     baseCell.appendChild(createDivNodeWithClasses(["storage-location"]));
+    //     baseCell.appendChild(createDivNodeWithClasses(["cell", "box", "box-on-storage-location"]));
+    //     return baseCell;
+    // }
+    "X": createCellWithBoxAndStorage
+}
+
+function createWall() {
+    return createDivNodeWithClasses(["cell", "wall"]); 
+}
+
+function createNonWallCell(rowIndex, columnIndex) {
+    const baseCell = createDivNodeWithClasses(["cell", "open-hall"]);
+    baseCell.dataset.row = rowIndex;
+    baseCell.dataset.column = columnIndex;
+    return baseCell; 
+}
+
+function createCellWithBox(rowIndex, columnIndex) {
+    const baseCell = createNonWallCell(rowIndex, columnIndex);
+    baseCell.appendChild(createDivNodeWithClasses(["cell", "box"]));
+    return baseCell; 
+} 
+
+function createCellWithStorageLocation(rowIndex, columnIndex) {
+    const baseCell = createNonWallCell(rowIndex, columnIndex);
+    baseCell.appendChild(createDivNodeWithClasses(["storage-location"]));
+    return baseCell;
+}
+
+function createPlayersInitialPosition(rowIndex, columnIndex) {
+    const baseCell = createNonWallCell(rowIndex, columnIndex);
+    baseCell.appendChild(createDivNodeWithClasses(["player"]));
+    return baseCell;
+}
+
+function createCellWithBoxAndStorage(rowIndex, columnIndex) {
+    const baseCell = createNonWallCell(rowIndex, columnIndex);
+    baseCell.appendChild(createDivNodeWithClasses(["storage-location"]));
+    baseCell.appendChild(createDivNodeWithClasses(["cell", "box", "box-on-storage-location"]));
+    return baseCell;
 }
 
 function checkWin() {
@@ -233,6 +267,4 @@ function checkWin() {
     }
 }
 
-initGameView();
-initCurrentModel();
 play();
