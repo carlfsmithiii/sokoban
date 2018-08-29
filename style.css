@@ -1,0 +1,37 @@
+:root {
+    --light-brown: #A5714E;
+    --brown: #763931;
+    --wall-color: rgb(39, 39, 41);
+    --cell-height: 30px;
+    --cell-width: 30px;
+
+}
+
+.storage-location {
+    z-index: 3;
+    height: calc(var(--cell-height) / 3);
+    width: calc(var(--cell-width) / 3);
+    border-radius: 50%;
+}
+
+.box {
+    z-index: 5;
+    background-color: var(--light-brown);
+    height: var(--cell-height);
+    width: var(--cell-width);
+}
+
+.box.box-on-storage-location {
+    background-color: var(--brown);
+}
+
+.wall {
+    background-color: var(--wall-color);
+}
+
+.player {
+    z-index: 1;
+    background-color: red;
+    height: var(--cell-height);
+    width: var(--cell-width); 
+}
