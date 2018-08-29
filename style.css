@@ -31,26 +31,18 @@
     z-index: 5;
     background-color: var(--light-brown);
     position: absolute;
-    /* height: var(--cell-height);
-    width: var(--cell-width); */
 }
 
 .box.box-on-storage-location {
     background-color: var(--brown);
-    /* height: var(--cell-height);
-    width: var(--cell-width); */
 }
 
 .wall {
     background-color: var(--wall-color);
-    /* height: var(--cell-height);
-    width: var(--cell-width); */
 }
 
 .open-hall {
     background-color: var(--hall-color);
-    /* height: var(--cell-height);
-    width: var(--cell-width);  */
 }
 
 .player {
