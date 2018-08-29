@@ -1,5 +1,6 @@
 const gameNode = document.getElementById("game-field");
-const boxCount = 7;
+let boxCount = 0;
+let isGameStillGoing = true;
 
 /*
  *  KEY FOR MAP
@@ -63,17 +64,19 @@ function initGameView() {
 
 function play() {
     document.addEventListener("keydown", (event) => {
-        const keyName = event.key;
-        if (keyName == "ArrowDown") {
-            downPressed();
-        } else if (keyName == "ArrowUp") {
-            upPressed();
-        } else if (keyName == "ArrowLeft") {
-            leftPressed();
-        } else if (keyName == "ArrowRight") {
-            rightPressed();
+        if (isGameStillGoing) {
+            const keyName = event.key;
+            if (keyName == "ArrowDown") {
+                downPressed();
+            } else if (keyName == "ArrowUp") {
+                upPressed();
+            } else if (keyName == "ArrowLeft") {
+                leftPressed();
+            } else if (keyName == "ArrowRight") {
+                rightPressed();
+            }
+            checkWin();
         }
-        checkWin();
     });
 }
 
@@ -175,6 +178,7 @@ const initCell = {
     "B": function(rowIndex, columnIndex) {
         const groundCell = initCell[" "](rowIndex, columnIndex);
         groundCell.appendChild(createDivNodeWithClasses(["cell", "box"]));
+        boxCount++;
         return groundCell;
     },
     "O": function(rowIndex, columnIndex) {
@@ -191,12 +195,14 @@ const initCell = {
         const groundCell = initCell[" "](rowIndex, columnIndex);
         groundCell.appendChild(createDivNodeWithClasses(["storage-location"]));
         groundCell.appendChild(createDivNodeWithClasses(["cell", "box", "box-on-storage-location"]));
+        boxCount++;
         return groundCell;
     }
 }
 
 function checkWin() {
     if (document.getElementsByClassName("box-on-storage-location").length == boxCount) {
+        isGameStillGoing = false;
         setTimeout(function() {alert("YOU WIN!");}, 300);
     }
 }
