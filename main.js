@@ -186,41 +186,11 @@ function shiftBox(rowShift, columnShift) {
 }
 
 const initCell = {
-    // "W": function(rowIndex, columnIndex) {
-    //     return createDivNodeWithClasses(["cell", "wall"]);
-    // },
     "W": createWall,
-    // " ": function(rowIndex, columnIndex) {
-    //     const baseCell = createDivNodeWithClasses(["cell", "open-hall"]);
-    //     baseCell.dataset.row = rowIndex;
-    //     baseCell.dataset.column = columnIndex;
-    //     return baseCell;
-    // },
     " ": createNonWallCell,
-    // "B": function(rowIndex, columnIndex) {
-    //     const baseCell = initCell[" "](rowIndex, columnIndex);
-    //     baseCell.appendChild(createDivNodeWithClasses(["cell", "box"]));
-    //     return baseCell;
-    // },
     "B": createCellWithBox,
-    // "O": function(rowIndex, columnIndex) {
-    //     const baseCell = initCell[" "](rowIndex, columnIndex);
-    //     baseCell.appendChild(createDivNodeWithClasses(["storage-location"]));
-    //     return baseCell;
-    // },
     "O": createCellWithStorageLocation,
-    // "S": function(rowIndex, columnIndex) {
-    //     const baseCell = initCell[" "](rowIndex, columnIndex);
-    //     baseCell.appendChild(createDivNodeWithClasses(["player"]));
-    //     return baseCell;
-    // },
     "S": createPlayersInitialPosition,
-    // "X": function(rowIndex, columnIndex) {
-    //     const baseCell = initCell[" "](rowIndex, columnIndex);
-    //     baseCell.appendChild(createDivNodeWithClasses(["storage-location"]));
-    //     baseCell.appendChild(createDivNodeWithClasses(["cell", "box", "box-on-storage-location"]));
-    //     return baseCell;
-    // }
     "X": createCellWithBoxAndStorage
 }
 
