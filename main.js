@@ -54,10 +54,7 @@ const direction = {
     none: 0
 };
 
-const currentPosition = {
-    // row: 2,
-    // column: 2
-}
+const currentPosition = {}
 
 function initGame() {
     gameGridHeight = gameStartingMap.length;
