@@ -200,10 +200,10 @@ function shiftBox(rowShift, columnShift) {
 function shiftBoxInView(box, rowShift, columnShift) {
     const newHomeForBox = getCellNode(rowShift * 2, columnShift * 2);
     newHomeForBox.appendChild(box);
-    changeBoxColorIfOnStorage(box, rowShift, columnShift);
+    changeBoxColorIfInStorage(box, rowShift, columnShift);
 }
 
-function changeBoxColorIfOnStorage(box, rowShift, columnShift) {
+function changeBoxColorIfInStorage(box, rowShift, columnShift) {
     if (gameStartingMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "O" || 
         gameStartingMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "X") {
         box.classList.add("box-on-storage-location");
@@ -218,15 +218,13 @@ function shiftBoxInModel(rowShift, columnShift) {
 }
 
 function getBoxNode(rowShift, columnShift) {
-    const rowQuery = "[data-row='" + (currentPosition.row + rowShift) + "']"; 
-    const columnQuery = "[data-column='" + (currentPosition.column + columnShift) + "']";
-    return document.querySelector(rowQuery + columnQuery + " .box");
+    return getCellNode(rowShift, columnShift, " .box");
 }
 
-function getCellNode(rowShift, columnShift) {
+function getCellNode(rowShift, columnShift, additionalQueryString = "") {
     const rowQuery = "[data-row='" + (currentPosition.row + rowShift) + "']"; 
     const columnQuery = "[data-column='" + (currentPosition.column + columnShift) + "']";
-    return document.querySelector(rowQuery + columnQuery);
+    return document.querySelector(rowQuery + columnQuery + additionalQueryString);
 }
 
 const initCell = {
