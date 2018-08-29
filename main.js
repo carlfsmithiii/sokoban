@@ -11,22 +11,40 @@ let isGameStillGoing = true;
  *    'X' is a storage location with a box already on it
  *    'S' is the player's starting position 
  */
-const initialMap = [
-  "  WWWWW ",
-  "WWW   W ",
-  "WOSB  W ",
-  "WWW BOW ",
-  "WOWWB W ",
-  "W W O WW",
-  "WB XBBOW",
-  "W   O  W",
-  "WWWWWWWW"
+
+
+const firstMap = [
+    "  WWWWW ",
+    "WWW   W ",
+    "WOSB  W ",
+    "WWW BOW ",
+    "WOWWB W ",
+    "W W O WW",
+    "WB XBBOW",
+    "W   O  W",
+    "WWWWWWWW"
 ];
 
-const currentMap = [];
+const secondMap = [
+    "    WWWWW          ",
+    "    W   W          ",
+    "    WB  W          ",
+    "  WWW  BWW         ",
+    "  W  B B W         ",
+    "WWW W WW W   WWWWWW",
+    "W   W WW WWWWW  OOW",
+    "W B  B          OOW",
+    "WWWWW WWW WSWW  OOW",
+    "    W     WWWWWWWWW",
+    "    WWWWWWW        "
+]
 
-const gameGridHeight = initialMap.length;
-const gameGridWidth = initialMap[0].length;
+let gameStartingMap  = firstMap;
+
+const updatedMap = [];
+
+let gameGridHeight = gameStartingMap.length;
+let gameGridWidth = gameStartingMap[0].length;
 
 const direction = {
     down: 1,
@@ -37,11 +55,13 @@ const direction = {
 };
 
 const currentPosition = {
-    row: 2,
-    column: 2
+    // row: 2,
+    // column: 2
 }
 
 function initGame() {
+    gameGridHeight = gameStartingMap.length;
+    gameGridWidth = gameStartingMap[0].length;
     initGameView();
     initCurrentMap();
 }
@@ -52,29 +72,34 @@ function initGameView() {
         gameNode.appendChild(rowNode)
 
         for (let columnIndex = 0; columnIndex < gameGridWidth; columnIndex++) {
-            const initialMapCellValue = initialMap[rowIndex][columnIndex];
+            const initialMapCellValue = gameStartingMap[rowIndex][columnIndex];
             rowNode.appendChild(initCell[initialMapCellValue](rowIndex, columnIndex));
         }
     }
 }
 
 function initCurrentMap() {
+    boxCount = 0;
     for (let rowIndex = 0; rowIndex < gameGridHeight; rowIndex++) {
-        currentMap.push([]);
+        updatedMap.push([]);
         for (let columnIndex = 0; columnIndex < gameGridWidth; columnIndex++) {
-            switch (initialMap[rowIndex][columnIndex]) {
+            switch (gameStartingMap[rowIndex][columnIndex]) {
                 case 'W':
-                    currentMap[rowIndex].push("W");
+                    updatedMap[rowIndex].push("W");
                     break;
                 case " ":
                 case "O":
+                    updatedMap[rowIndex].push(" ");
+                    break;
                 case "S":
-                    currentMap[rowIndex].push(" ");
+                    updatedMap[rowIndex].push(" ");
+                    currentPosition.row = rowIndex;
+                    currentPosition.column = columnIndex;
                     break;
                 case "X":
                 case "B":
                     boxCount++;
-                    currentMap[rowIndex].push("B");
+                    updatedMap[rowIndex].push("B");
                     break;
             }
         }
@@ -156,14 +181,14 @@ function isValidPosition(rowShift, columnShift) {
 }
 
 function isWall(rowShift, columnShift) {
-    if (currentMap[currentPosition.row + rowShift][currentPosition.column + columnShift] == "W") {
+    if (updatedMap[currentPosition.row + rowShift][currentPosition.column + columnShift] == "W") {
         return true;
     }
     return false;
 }
 
 function isBox(rowShift, columnShift) {
-    if (currentMap[currentPosition.row + rowShift][currentPosition.column + columnShift] == "B") {
+    if (updatedMap[currentPosition.row + rowShift][currentPosition.column + columnShift] == "B") {
         return true;
     }
     return false;    
@@ -182,8 +207,8 @@ function shiftBoxInView(box, rowShift, columnShift) {
 }
 
 function changeBoxColorIfOnStorage(box, rowShift, columnShift) {
-    if (initialMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "O" || 
-        initialMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "X") {
+    if (gameStartingMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "O" || 
+        gameStartingMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] == "X") {
         box.classList.add("box-on-storage-location");
     } else {
         box.classList.remove("box-on-storage-location");
@@ -191,8 +216,8 @@ function changeBoxColorIfOnStorage(box, rowShift, columnShift) {
 }
 
 function shiftBoxInModel(rowShift, columnShift) {
-    currentMap[currentPosition.row + rowShift][currentPosition.column + columnShift] = " ";
-    currentMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] = "B";
+    updatedMap[currentPosition.row + rowShift][currentPosition.column + columnShift] = " ";
+    updatedMap[currentPosition.row + rowShift * 2][currentPosition.column + columnShift * 2] = "B";
 }
 
 function getBoxNode(rowShift, columnShift) {
@@ -254,9 +279,21 @@ function createCellWithBoxAndStorage(rowIndex, columnIndex) {
 
 function checkWin() {
     if (document.getElementsByClassName("box-on-storage-location").length == boxCount) {
-        isGameStillGoing = false;
+        // isGameStillGoing = false;
         setTimeout(function() {alert("YOU WIN!");}, 100);
+        setTimeout(function() {rotateGame();}, 500);
     }
+}
+
+function rotateGame() {
+    if (gameStartingMap == firstMap) {
+        gameStartingMap = secondMap;
+    } else {
+        gameStartingMap = firstMap;
+    }
+    document.getElementById("game-field").textContent = "";
+    updatedMap.splice(0, updatedMap.length);
+    initGame();
 }
 
 play();
