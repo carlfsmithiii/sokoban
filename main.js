@@ -23,17 +23,19 @@ const initialMap = [
   "WWWWWWWW"
 ];
 
-const currentMap = [
-    "  WWWWW ".split(""),
-    "WWW   W ".split(""),
-    "W  B  W ".split(""),
-    "WWW B W ".split(""),
-    "WOWWB W ".split(""),
-    "W W   WW".split(""),
-    "WB BBB W".split(""),
-    "W      W".split(""),
-    "WWWWWWWW".split("")
-];
+// const currentMap = [
+//     "  WWWWW ".split(""),
+//     "WWW   W ".split(""),
+//     "W  B  W ".split(""),
+//     "WWW B W ".split(""),
+//     "WOWWB W ".split(""),
+//     "W W   WW".split(""),
+//     "WB BBB W".split(""),
+//     "W      W".split(""),
+//     "WWWWWWWW".split("")
+// ];
+
+const currentMap = [];
 
 const gameGridHeight = initialMap.length;
 const gameGridWidth = initialMap[0].length;
@@ -54,10 +56,34 @@ let currentPosition = {
 function initGameView() {
     for (let rowIndex = 0; rowIndex < gameGridHeight; rowIndex++) {
         const rowNode = createDivNodeWithClasses(["row"]);
-        gameNode.appendChild(rowNode);
+        gameNode.appendChild(rowNode)
 
         for (let columnIndex = 0; columnIndex < gameGridWidth; columnIndex++) {
-            rowNode.appendChild(initCell[initialMap[rowIndex][columnIndex]](rowIndex, columnIndex));
+            const initialMapCellValue = initialMap[rowIndex][columnIndex];
+            rowNode.appendChild(initCell[initialMapCellValue](rowIndex, columnIndex));
+        }
+    }
+}
+
+function initCurrentModel() {
+    for (let rowIndex = 0; rowIndex < gameGridHeight; rowIndex++) {
+        currentMap.push([]);
+        for (let columnIndex = 0; columnIndex < gameGridWidth; columnIndex++) {
+            switch (initialMap[rowIndex][columnIndex]) {
+                case 'W':
+                    currentMap[rowIndex].push("W");
+                    break;
+                case " ":
+                case "O":
+                case "S":
+                    currentMap[rowIndex].push(" ");
+                    break;
+                case "X":
+                case "B":
+                    boxCount++;
+                    currentMap[rowIndex].push("B");
+                    break;
+            }
         }
     }
 }
@@ -178,7 +204,7 @@ const initCell = {
     "B": function(rowIndex, columnIndex) {
         const groundCell = initCell[" "](rowIndex, columnIndex);
         groundCell.appendChild(createDivNodeWithClasses(["cell", "box"]));
-        boxCount++;
+        //boxCount++;
         return groundCell;
     },
     "O": function(rowIndex, columnIndex) {
@@ -195,7 +221,7 @@ const initCell = {
         const groundCell = initCell[" "](rowIndex, columnIndex);
         groundCell.appendChild(createDivNodeWithClasses(["storage-location"]));
         groundCell.appendChild(createDivNodeWithClasses(["cell", "box", "box-on-storage-location"]));
-        boxCount++;
+        // boxCount++;
         return groundCell;
     }
 }
@@ -208,4 +234,5 @@ function checkWin() {
 }
 
 initGameView();
+initCurrentModel();
 play();
